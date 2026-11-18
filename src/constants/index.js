@@ -1,0 +1,473 @@
+/**
+ * AI Academy - System Constants
+ * Centralized enumeration of roles, permissions, statuses, error codes, and configuration defaults.
+ */
+
+export const PLATFORM_ROLES = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  PLATFORM_ADMIN: 'PLATFORM_ADMIN',
+  PLATFORM_SUPPORT: 'PLATFORM_SUPPORT',
+  BILLING_ADMIN: 'BILLING_ADMIN',
+  PLATFORM_AI_MANAGER: 'PLATFORM_AI_MANAGER',
+};
+
+export const ORG_ROLES = {
+  ORG_OWNER: 'ORG_OWNER',
+  ORG_ADMIN: 'ORG_ADMIN',
+  ACADEMY_MANAGER: 'ACADEMY_MANAGER',
+  COURSE_CREATOR: 'COURSE_CREATOR',
+  INSTRUCTOR: 'INSTRUCTOR',
+  REVIEWER: 'REVIEWER',
+  DEPARTMENT_MANAGER: 'DEPARTMENT_MANAGER',
+  STUDENT: 'STUDENT',
+  PARENT_GUARDIAN: 'PARENT_GUARDIAN',
+};
+
+export const ALL_ROLES = {
+  ...PLATFORM_ROLES,
+  ...ORG_ROLES,
+};
+
+export const PERMISSIONS = {
+  // Organization
+  ORGANIZATION_CREATE: 'organization.create',
+  ORGANIZATION_READ: 'organization.read',
+  ORGANIZATION_UPDATE: 'organization.update',
+  ORGANIZATION_DELETE: 'organization.delete',
+  ORGANIZATION_SUSPEND: 'organization.suspend',
+  ORGANIZATION_REACTIVATE: 'organization.reactivate',
+
+  // Users & Membership
+  USER_CREATE: 'user.create',
+  USER_READ: 'user.read',
+  USER_UPDATE: 'user.update',
+  USER_DELETE: 'user.delete',
+  USER_ASSIGN_ROLE: 'user.assign_role',
+  USER_INVITE: 'user.invite',
+
+  // Academy & Settings
+  ACADEMY_MANAGE: 'academy.manage',
+  ACADEMY_SETTINGS: 'academy.settings',
+  SETTINGS_MANAGE: 'settings.manage',
+
+  // Courses & Curriculum
+  COURSE_CREATE: 'course.create',
+  COURSE_READ: 'course.read',
+  COURSE_UPDATE: 'course.update',
+  COURSE_DELETE: 'course.delete',
+  COURSE_PUBLISH: 'course.publish',
+  COURSE_ARCHIVE: 'course.archive',
+  COURSE_ASSIGN: 'course.assign',
+  LESSON_CREATE: 'lesson.create',
+  LESSON_UPDATE: 'lesson.update',
+  LESSON_DELETE: 'lesson.delete',
+
+  // AI Operations
+  AI_GENERATE_COURSE: 'ai.generate_course',
+  AI_GENERATE_LESSON: 'ai.generate_lesson',
+  AI_REVIEW_CONTENT: 'ai.review_content',
+  AI_APPROVE_CONTENT: 'ai.approve_content',
+  AI_CONFIG_MANAGE: 'ai.config_manage',
+
+  // Video Generation & Media
+  VIDEO_GENERATE: 'video.generate',
+  VIDEO_PUBLISH: 'video.publish',
+  VIDEO_DELETE: 'video.delete',
+
+  // Assessments & Grading
+  ASSESSMENT_CREATE: 'assessment.create',
+  ASSESSMENT_UPDATE: 'assessment.update',
+  ASSESSMENT_EVALUATE: 'assessment.evaluate',
+  ASSESSMENT_SUBMIT: 'assessment.submit',
+
+  // Certificates
+  CERTIFICATE_ISSUE: 'certificate.issue',
+  CERTIFICATE_REVOKE: 'certificate.revoke',
+  CERTIFICATE_VERIFY: 'certificate.verify',
+
+  // Analytics & Auditing
+  ANALYTICS_VIEW: 'analytics.view',
+  ANALYTICS_EXPORT: 'analytics.export',
+  AUDIT_VIEW: 'audit.view',
+
+  // Reporting Engine (Phase 08)
+  REPORT_SCHEDULE: 'report.schedule',
+  REPORT_EXPORT: 'report.export',
+
+  // Platform Super Admin
+  PLATFORM_MANAGE: 'platform.manage',
+
+  // AI Tutor & Learning Companion (Phase 07)
+  TUTOR_CHAT: 'tutor.chat',
+  TUTOR_ANALYTICS_VIEW: 'tutor.analytics_view',
+  TUTOR_CONFUSION_MANAGE: 'tutor.confusion_manage',
+
+  // Billing & Subscriptions
+  BILLING_MANAGE: 'billing.manage',
+  BILLING_VIEW: 'billing.view',
+};
+
+export const USER_STATUS = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  PENDING_VERIFICATION: 'PENDING_VERIFICATION',
+};
+
+export const ORG_STATUS = {
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  PENDING_SETUP: 'PENDING_SETUP',
+  DEACTIVATED: 'DEACTIVATED',
+};
+
+export const COURSE_STATUS = {
+  DRAFT: 'DRAFT',
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  APPROVED: 'APPROVED',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED',
+};
+
+export const DIFFICULTY_LEVEL = {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  ADVANCED: 'ADVANCED',
+  EXPERT: 'EXPERT',
+};
+
+export const COURSE_VISIBILITY = {
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE',
+  RESTRICTED: 'RESTRICTED',
+};
+
+export const LESSON_TYPE = {
+  VIDEO: 'VIDEO',
+  ARTICLE: 'ARTICLE',
+  QUIZ: 'QUIZ',
+  ASSIGNMENT: 'ASSIGNMENT',
+  RESOURCE: 'RESOURCE',
+};
+
+export const BLOCK_TYPE = {
+  TEXT: 'TEXT',
+  VIDEO: 'VIDEO',
+  AUDIO: 'AUDIO',
+  IMAGE: 'IMAGE',
+  PDF: 'PDF',
+  RESOURCE: 'RESOURCE',
+  QUIZ: 'QUIZ',
+  INTERACTIVE: 'INTERACTIVE',
+  EMBED: 'EMBED',
+  ASSIGNMENT: 'ASSIGNMENT',
+};
+
+export const ENROLLMENT_STATUS = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  EXPIRED: 'EXPIRED',
+  DROPPED: 'DROPPED',
+};
+
+export const ENROLLMENT_TYPE = {
+  INDIVIDUAL: 'INDIVIDUAL',
+  BULK: 'BULK',
+  DEPARTMENT: 'DEPARTMENT',
+  GROUP: 'GROUP',
+  MANDATORY: 'MANDATORY',
+};
+
+export const PROGRESS_STATUS = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+};
+
+export const JOB_STATUS = {
+  QUEUED: 'QUEUED',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED',
+};
+
+export const SOURCE_DOC_STATUS = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  PROCESSED: 'PROCESSED',
+  FAILED: 'FAILED',
+};
+
+export const AI_REVIEW_STATUS = {
+  AI_DRAFT: 'AI_DRAFT',
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  NEEDS_REVISION: 'NEEDS_REVISION',
+  PUBLISHED: 'PUBLISHED',
+};
+
+export const AI_PROVIDER = {
+  GEMINI: 'GEMINI',
+  OPENAI: 'OPENAI',
+  MOCK: 'MOCK',
+};
+
+export const AI_TASK_TYPE = {
+  OUTLINE_GENERATION: 'OUTLINE_GENERATION',
+  LESSON_GENERATION: 'LESSON_GENERATION',
+  COURSE_GENERATION: 'COURSE_GENERATION',
+  REWRITE: 'REWRITE',
+  SIMPLIFY: 'SIMPLIFY',
+  EXPAND: 'EXPAND',
+  SUMMARIZE: 'SUMMARIZE',
+  TRANSLATE: 'TRANSLATE',
+  QUIZ_GENERATION: 'QUIZ_GENERATION',
+};
+
+export const SUPPORTED_SOURCE_FORMATS = [
+  'pdf',
+  'docx',
+  'pptx',
+  'txt',
+  'md',
+  'csv',
+  'xlsx',
+  'png',
+  'jpg',
+  'jpeg',
+  'mp3',
+  'mp4',
+];
+
+export const ERROR_CODES = {
+  UNAUTHORIZED: 'ERR_UNAUTHORIZED',
+  FORBIDDEN: 'ERR_FORBIDDEN',
+  NOT_FOUND: 'ERR_NOT_FOUND',
+  VALIDATION_ERROR: 'ERR_VALIDATION',
+  BAD_REQUEST: 'ERR_BAD_REQUEST',
+  CONFLICT: 'ERR_CONFLICT',
+  RATE_LIMIT_EXCEEDED: 'ERR_RATE_LIMIT_EXCEEDED',
+  INTERNAL_ERROR: 'ERR_INTERNAL_SERVER',
+  DATABASE_ERROR: 'ERR_DATABASE',
+  REDIS_ERROR: 'ERR_REDIS',
+  TENANT_ISOLATION_ERROR: 'ERR_TENANT_ISOLATION',
+};
+
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  ACCEPTED: 202,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  CONFLICT: 409,
+  UNPROCESSABLE_ENTITY: 422,
+  TOO_MANY_REQUESTS: 429,
+  INTERNAL_SERVER_ERROR: 500,
+  SERVICE_UNAVAILABLE: 503,
+};
+
+export const PAGINATION = {
+  DEFAULT_PAGE: 1,
+  DEFAULT_LIMIT: 20,
+  MAX_LIMIT: 100,
+};
+
+export const SUPPORTED_LANGUAGES = [
+  { code: 'en', name: 'English', direction: 'ltr' },
+  { code: 'mr', name: 'Marathi (मराठी)', direction: 'ltr' },
+  { code: 'hi', name: 'Hindi (हिन्दी)', direction: 'ltr' },
+  { code: 'te', name: 'Telugu (తెలుగు)', direction: 'ltr' },
+];
+
+export const VIDEO_STATUS = {
+  DRAFT: 'DRAFT',
+  SCRIPTING: 'SCRIPTING',
+  QUEUED: 'QUEUED',
+  RENDERING: 'RENDERING',
+  READY: 'READY',
+  FAILED: 'FAILED',
+};
+
+export const SCENE_VISUAL_TYPE = {
+  SLIDE: 'SLIDE',
+  AVATAR_PRESENTATION: 'AVATAR_PRESENTATION',
+  CODE_DEMO: 'CODE_DEMO',
+  TEXT_HIGHLIGHT: 'TEXT_HIGHLIGHT',
+  IMAGE: 'IMAGE',
+  SPLIT_SCREEN: 'SPLIT_SCREEN',
+};
+
+export const VOICE_PROVIDER = {
+  MOCK: 'MOCK',
+  EDGE_TTS: 'EDGE_TTS',
+  ELEVENLABS: 'ELEVENLABS',
+  OPENAI: 'OPENAI',
+  GOOGLE: 'GOOGLE',
+};
+
+export const VOICE_GENDER = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  NEUTRAL: 'NEUTRAL',
+};
+
+export const MEDIA_TYPE = {
+  VIDEO: 'VIDEO',
+  AUDIO: 'AUDIO',
+  IMAGE: 'IMAGE',
+  SUBTITLE: 'SUBTITLE',
+  DOCUMENT: 'DOCUMENT',
+};
+
+export const VIDEO_ASPECT_RATIO = {
+  LANDSCAPE_16_9: '16:9',
+  PORTRAIT_9_16: '9:16',
+  SQUARE_1_1: '1:1',
+};
+
+export const VIDEO_RESOLUTION = {
+  RES_720P: '720p',
+  RES_1080P: '1080p',
+  RES_4K: '4k',
+};
+
+export const RENDERING_STEP = {
+  INITIALIZING: 'INITIALIZING',
+  SYNTHESIZING_VOICE: 'SYNTHESIZING_VOICE',
+  GENERATING_SLIDES: 'GENERATING_SLIDES',
+  RENDERING_AVATAR: 'RENDERING_AVATAR',
+  STITCHING_SCENES: 'STITCHING_SCENES',
+  GENERATING_SUBTITLES: 'GENERATING_SUBTITLES',
+  ENCODING_HLS: 'ENCODING_HLS',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+};
+
+export const ASSESSMENT_TYPE = {
+  QUIZ: 'QUIZ',
+  EXAM: 'EXAM',
+  PRACTICE: 'PRACTICE',
+  CERTIFICATION: 'CERTIFICATION',
+};
+
+export const QUESTION_TYPE = {
+  MULTIPLE_CHOICE: 'MULTIPLE_CHOICE',
+  MULTIPLE_SELECT: 'MULTIPLE_SELECT',
+  TRUE_FALSE: 'TRUE_FALSE',
+  FILL_BLANK: 'FILL_BLANK',
+  CODE_CHALLENGE: 'CODE_CHALLENGE',
+  OPEN_ENDED: 'OPEN_ENDED',
+};
+
+export const ASSESSMENT_STATUS = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED',
+};
+
+export const ATTEMPT_STATUS = {
+  IN_PROGRESS: 'IN_PROGRESS',
+  SUBMITTED: 'SUBMITTED',
+  EVALUATED: 'EVALUATED',
+  EXPIRED: 'EXPIRED',
+};
+
+export const CERTIFICATE_STATUS = {
+  ISSUED: 'ISSUED',
+  REVOKED: 'REVOKED',
+  EXPIRED: 'EXPIRED',
+};
+
+// Phase 07: AI Tutor & Learning Companion Constants
+export const TUTOR_MODE = {
+  TUTOR: 'TUTOR',
+  SOCRATIC: 'SOCRATIC',
+  PRACTICE: 'PRACTICE',
+  CODE_HINT: 'CODE_HINT',
+};
+
+export const TUTOR_CONTEXT_SCOPE = {
+  GLOBAL: 'GLOBAL',
+  COURSE: 'COURSE',
+  LESSON: 'LESSON',
+  ASSESSMENT: 'ASSESSMENT',
+};
+
+export const TUTOR_MESSAGE_SENDER = {
+  USER: 'USER',
+  ASSISTANT: 'ASSISTANT',
+  SYSTEM: 'SYSTEM',
+};
+
+export const TUTOR_FEEDBACK_RATING = {
+  HELPFUL: 'HELPFUL',
+  UNHELPFUL: 'UNHELPFUL',
+  INACCURATE: 'INACCURATE',
+  CONFUSING: 'CONFUSING',
+};
+
+export const TUTOR_CONFUSION_SEVERITY = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+};
+
+export const LEARNING_STYLE = {
+  CONCEPTUAL: 'CONCEPTUAL',
+  HANDS_ON: 'HANDS_ON',
+  VISUAL: 'VISUAL',
+  AUDITORY: 'AUDITORY',
+};
+
+export const HINT_LEVEL = {
+  CONCEPTUAL: 1,
+  APPROACH: 2,
+  PSEUDOCODE: 3,
+  SYNTAX: 4,
+};
+
+// Phase 08: Analytics, Reporting & Platform Administration Constants
+export const SUBSCRIPTION_TIER = {
+  FREE: 'FREE',
+  STARTER: 'STARTER',
+  PRO: 'PRO',
+  ENTERPRISE: 'ENTERPRISE',
+};
+
+export const SUBSCRIPTION_STATUS = {
+  ACTIVE: 'ACTIVE',
+  TRIALING: 'TRIALING',
+  PAST_DUE: 'PAST_DUE',
+  CANCELLED: 'CANCELLED',
+  EXPIRED: 'EXPIRED',
+};
+
+export const REPORT_TYPE = {
+  LEARNER_PROGRESS: 'LEARNER_PROGRESS',
+  COURSE_COMPLETION: 'COURSE_COMPLETION',
+  ASSESSMENT_RESULTS: 'ASSESSMENT_RESULTS',
+  AI_USAGE: 'AI_USAGE',
+  AUDIT_LOGS: 'AUDIT_LOGS',
+  ORGANIZATION_OVERVIEW: 'ORGANIZATION_OVERVIEW',
+};
+
+export const REPORT_SCHEDULE = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+};
+
+export const REPORT_FORMAT = {
+  CSV: 'CSV',
+  JSON: 'JSON',
+};
+
+
+
+
+

@@ -1,0 +1,43 @@
+{
+  "name": "ai-academy",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AI Academy - Enterprise AI-Native Learning Management SaaS Platform",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "node scripts/test-runner.js",
+    "test:foundation": "node scripts/test-foundation.js",
+    "test:phase01": "node scripts/test-phase01.js",
+    "test:phase02": "node scripts/test-phase02.js",
+    "test:phase03": "node scripts/test-phase03.js",
+    "test:phase04": "node scripts/test-phase04.js",
+    "test:phase05": "node scripts/test-phase05.js",
+    "test:phase06": "node scripts/test-phase06.js",
+    "test:phase07": "node scripts/test-phase07.js",
+    "test:phase08": "node scripts/test-phase08.js",
+    "seed": "node scripts/seed-demo-data.js",
+    "seed:reset": "node scripts/seed-demo-data.js --reset",
+    "update:images": "node scripts/update-course-images.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.475.0",
+    "mongoose": "^8.10.1",
+    "next": "^15.2.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.20.1",
+    "eslint-config-next": "^15.2.1",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^3.4.17"
+  }
+}
