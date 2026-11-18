@@ -82,6 +82,7 @@ export function VideoClipStudio({ isAdmin = false }) {
 
   // Active breakdown & clip state
   const [activeBreakdown, setActiveBreakdown] = useState(null);
+  const [loadingBreakdown, setLoadingBreakdown] = useState(false);
   const [activeClipIndex, setActiveClipIndex] = useState(0);
   const [playerMode, setPlayerMode] = useState('SYNCED'); // 'SYNCED' | 'TRIMMED' | 'FULL'
   const [clipCurrentSec, setClipCurrentSec] = useState(0);
@@ -100,7 +101,9 @@ export function VideoClipStudio({ isAdmin = false }) {
   const loadSavedBreakdowns = useCallback(async () => {
     setLoadingLibrary(true);
     try {
-      const res = await fetch(`/api/v1/video-clips${isAdmin ? '?scope=all' : ''}`);
+      const qs = new URLSearchParams({ summary: 'true' });
+      if (isAdmin) qs.set('scope', 'all');
+      const res = await fetch(`/api/v1/video-clips?${qs.toString()}`);
       const data = await res.json();
       if (data.success && Array.isArray(data.data)) {
         setSavedBreakdowns(data.data);
@@ -112,9 +115,40 @@ export function VideoClipStudio({ isAdmin = false }) {
     }
   }, [isAdmin]);
 
+  const loadFullBreakdownById = useCallback(async (id) => {
+    if (!id) return;
+    setLoadingBreakdown(true);
+    setError('');
+    try {
+      const res = await fetch(`/api/v1/video-clips/${id}`);
+      const data = await res.json();
+      if (res.ok && data.success && data.data) {
+        setActiveBreakdown(data.data);
+        setActiveClipIndex(0);
+        setPlayerMode('SYNCED');
+        setEditingTiming(false);
+        setQuizAnswers({});
+        setViewMode('STUDIO');
+        setProcessingStage('DONE');
+      }
+    } catch (err) {
+      console.error('Failed to load video breakdown details:', err);
+      setError('Could not load saved video breakdown.');
+    } finally {
+      setLoadingBreakdown(false);
+    }
+  }, []);
+
   useEffect(() => {
     loadSavedBreakdowns();
-  }, [loadSavedBreakdowns]);
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const idParam = params.get('id');
+      if (idParam) {
+        loadFullBreakdownById(idParam);
+      }
+    }
+  }, [loadSavedBreakdowns, loadFullBreakdownById]);
 
   const handleFileSelected = (file) => {
     if (!file) return;
@@ -242,6 +276,11 @@ export function VideoClipStudio({ isAdmin = false }) {
       setSelectedFile(null);
       setTitle('');
       setDetectedDuration(0);
+      if (typeof window !== 'undefined' && breakdown?._id) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('id', breakdown._id);
+        window.history.replaceState(null, '', url.toString());
+      }
 
       // Refresh library list
       loadSavedBreakdowns();
@@ -285,14 +324,26 @@ export function VideoClipStudio({ isAdmin = false }) {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const openSavedBreakdown = (item) => {
-    setActiveBreakdown(item);
-    setActiveClipIndex(0);
-    setPlayerMode('SYNCED');
-    setEditingTiming(false);
-    setQuizAnswers({});
+  const openSavedBreakdown = async (item) => {
+    if (typeof window !== 'undefined' && item?._id) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('id', item._id);
+      window.history.replaceState(null, '', url.toString());
+    }
+
+    if (Array.isArray(item?.clips) && item.clips.length > 0 && item.clips[0]?.clipUrl) {
+      setActiveBreakdown(item);
+      setActiveClipIndex(0);
+      setPlayerMode('SYNCED');
+      setEditingTiming(false);
+      setQuizAnswers({});
+      setViewMode('STUDIO');
+      setProcessingStage('DONE');
+      return;
+    }
+
     setViewMode('STUDIO');
-    setProcessingStage('DONE');
+    await loadFullBreakdownById(item._id);
   };
 
   const startNewUpload = () => {
@@ -302,6 +353,11 @@ export function VideoClipStudio({ isAdmin = false }) {
     setProcessingStage('IDLE');
     setError('');
     setViewMode('STUDIO');
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('id');
+      window.history.replaceState(null, '', url.toString());
+    }
   };
 
   const clips = activeBreakdown?.clips || [];
@@ -442,9 +498,15 @@ export function VideoClipStudio({ isAdmin = false }) {
                 : 'bg-white/10 text-white border-white/20 hover:bg-white/20 hover:text-white'
             }
             onClick={() => setViewMode(viewMode === 'LIBRARY' ? 'STUDIO' : 'LIBRARY')}
-            leftIcon={<FolderOpen className="w-4 h-4" />}
+            leftIcon={
+              loadingLibrary ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <FolderOpen className="w-4 h-4" />
+              )
+            }
           >
-            Saved Videos ({savedBreakdowns.length})
+            {loadingLibrary ? 'Saved Videos' : `Saved Videos (${savedBreakdowns.length})`}
           </Button>
           {activeBreakdown && (
             <Button
@@ -486,17 +548,20 @@ export function VideoClipStudio({ isAdmin = false }) {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {savedBreakdowns.map((item) => (
+                {savedBreakdowns.map((item) => {
+                  const thumb = item.thumbnailUrl || item.clips?.[0]?.thumbnailUrl;
+                  const count = item.clipCount ?? item.clips?.length ?? 0;
+                  return (
                   <div
                     key={item._id}
                     onClick={() => openSavedBreakdown(item)}
                     className="group cursor-pointer rounded-xl border border-slate-200 bg-white overflow-hidden hover:border-emerald-400 hover:shadow-md transition-all flex flex-col"
                   >
                     <div className="relative h-36 bg-slate-900 overflow-hidden">
-                      {item.clips?.[0]?.thumbnailUrl ? (
+                      {thumb ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
-                          src={item.clips[0].thumbnailUrl}
+                          src={thumb}
                           alt={item.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
                         />
@@ -507,7 +572,7 @@ export function VideoClipStudio({ isAdmin = false }) {
                       )}
                       <div className="absolute top-2 left-2 flex gap-1.5">
                         <Badge className="bg-slate-900/80 text-white border-0 backdrop-blur-xs">
-                          <Scissors className="w-3 h-3 text-emerald-400" /> {item.clips?.length || 0} Clips
+                          <Scissors className="w-3 h-3 text-emerald-400" /> {count} Clips
                         </Badge>
                       </div>
                       <div className="absolute bottom-2 right-2">
@@ -538,15 +603,26 @@ export function VideoClipStudio({ isAdmin = false }) {
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </CardContent>
         </Card>
       )}
 
+      {/* LOADING SPECIFIC BREAKDOWN VIEW */}
+      {viewMode === 'STUDIO' && loadingBreakdown && (
+        <Card>
+          <CardContent className="py-16 flex flex-col items-center justify-center gap-3 text-slate-600">
+            <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+            <p className="font-medium text-slate-800">Loading your video clips and AI explanations...</p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* UPLOAD & CONFIGURE VIEW (when no active breakdown is displayed) */}
-      {viewMode === 'STUDIO' && !activeBreakdown && (
+      {viewMode === 'STUDIO' && !activeBreakdown && !loadingBreakdown && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Upload Dropzone & Options */}
           <Card className="lg:col-span-2">
@@ -787,13 +863,26 @@ export function VideoClipStudio({ isAdmin = false }) {
               </CardContent>
             </Card>
 
-            {savedBreakdowns.length > 0 && (
+            {loadingLibrary ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-emerald-600" />
+                    Recent Videos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2.5">
+                  <div className="h-14 rounded-lg bg-slate-100 animate-pulse" />
+                  <div className="h-14 rounded-lg bg-slate-100 animate-pulse" />
+                </CardContent>
+              </Card>
+            ) : savedBreakdowns.length > 0 && (
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base flex items-center justify-between">
                     <span className="flex items-center gap-2">
                       <Clock className="w-4 h-4 text-emerald-600" />
-                      Recent Videos
+                      Recent Videos ({savedBreakdowns.length})
                     </span>
                     <button
                       type="button"
@@ -805,7 +894,7 @@ export function VideoClipStudio({ isAdmin = false }) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2.5">
-                  {savedBreakdowns.slice(0, 4).map((item) => (
+                  {savedBreakdowns.slice(0, 5).map((item) => (
                     <button
                       key={item._id}
                       type="button"
@@ -815,7 +904,7 @@ export function VideoClipStudio({ isAdmin = false }) {
                       <div className="min-w-0">
                         <p className="text-sm font-medium text-slate-900 truncate">{item.title}</p>
                         <p className="text-xs text-slate-500">
-                          {item.clips?.length || 0} clips • {formatDuration(item.durationSeconds)} • {item.language}
+                          {item.clipCount ?? item.clips?.length ?? 0} clips • {formatDuration(item.durationSeconds)} • {item.language}
                         </p>
                       </div>
                       <Play className="w-4 h-4 text-emerald-600 shrink-0" />

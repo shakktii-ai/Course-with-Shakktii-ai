@@ -101,6 +101,17 @@ export function AdminShell({ children }) {
 
   useEffect(() => {
     let mounted = true;
+    try {
+      const cached = sessionStorage.getItem('ai_academy_shell_identity');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.user) setUser(parsed.user);
+        if (parsed.academy) setAcademy(parsed.academy);
+      }
+    } catch {
+      // ignore
+    }
+
     async function loadIdentity() {
       try {
         const [meRes, acRes] = await Promise.all([
@@ -108,11 +119,19 @@ export function AdminShell({ children }) {
           fetch('/api/v1/academy'),
         ]);
         const [meData, acData] = await Promise.all([meRes.json(), acRes.json()]);
-        if (mounted && meData.success) {
-          setUser(meData.data);
-        }
-        if (mounted && acData.success) {
-          setAcademy(acData.data?.academy);
+        if (mounted) {
+          const nextUser = meData.success ? meData.data : null;
+          const nextAcademy = acData.success ? acData.data?.academy : null;
+          if (nextUser) setUser(nextUser);
+          if (nextAcademy) setAcademy(nextAcademy);
+          try {
+            sessionStorage.setItem(
+              'ai_academy_shell_identity',
+              JSON.stringify({ user: nextUser, academy: nextAcademy })
+            );
+          } catch {
+            // ignore
+          }
         }
       } catch (err) {
         console.error('Failed to load session identity', err);
@@ -126,6 +145,7 @@ export function AdminShell({ children }) {
 
   const handleSignOut = async () => {
     try {
+      sessionStorage.removeItem('ai_academy_shell_identity');
       await fetch('/api/v1/auth/logout', { method: 'POST' });
     } catch {
       // ignore

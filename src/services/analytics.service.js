@@ -336,6 +336,7 @@ export class AnalyticsService extends BaseService {
       certificates,
       timeAgg,
       attemptsAgg,
+      progressLogs,
     ] = await Promise.all([
       Enrollment.countDocuments({ tenantId, userId }),
       Enrollment.countDocuments({ tenantId, userId, status: ENROLLMENT_STATUS.COMPLETED }),
@@ -348,13 +349,12 @@ export class AnalyticsService extends BaseService {
         { $match: { tenantId, userId } },
         { $group: { _id: null, avgScore: { $avg: '$scorePercentage' } } },
       ]),
+      LessonProgress.find({ tenantId, userId, isCompleted: true })
+        .select('completedAt')
+        .sort({ completedAt: -1 })
+        .limit(60)
+        .lean(),
     ]);
-
-    // Calculate learning streak (days active consecutively)
-    const progressLogs = await LessonProgress.find({ tenantId, userId, isCompleted: true })
-      .sort({ completedAt: -1 })
-      .limit(60)
-      .lean();
 
     let streak = 0;
     const daysSeen = new Set();

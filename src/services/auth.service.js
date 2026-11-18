@@ -20,6 +20,22 @@ import { SessionService } from './session.service.js';
 const SESSION_EXPIRATION_DAYS = 7;
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
+const SESSION_CACHE_TTL_MS = 30 * 1000; // 30s in-memory session cache across parallel API calls
+const LAST_ACTIVE_TOUCH_INTERVAL_MS = 5 * 60 * 1000; // Throttle lastActiveAt DB writes to every 5m
+
+const sessionCache =
+  globalThis.__aiAcademySessionCache || (globalThis.__aiAcademySessionCache = new Map());
+
+function setCachedSession(token, userContext) {
+  if (sessionCache.size > 500) {
+    const oldestKey = sessionCache.keys().next().value;
+    sessionCache.delete(oldestKey);
+  }
+  sessionCache.set(token, {
+    userContext,
+    expiresAt: Date.now() + SESSION_CACHE_TTL_MS,
+  });
+}
 
 export class AuthService {
   /**
@@ -155,6 +171,8 @@ export class AuthService {
    */
   static async logout({ sessionToken, ipAddress = 'Unknown', userAgent = 'Unknown' }) {
     if (!sessionToken) return null;
+
+    sessionCache.delete(sessionToken);
 
     const session = await Session.findOne({ sessionToken, isValid: true });
     if (!session) return null;
@@ -381,6 +399,12 @@ export class AuthService {
       throw new UnauthorizedError('Authentication token missing');
     }
 
+    // Fast-path: return cached session user context for rapid parallel API calls
+    const cached = sessionCache.get(sessionToken);
+    if (cached && cached.expiresAt > Date.now()) {
+      return cached.userContext;
+    }
+
     const session = await Session.findOne({
       sessionToken,
       isValid: true,
@@ -388,30 +412,39 @@ export class AuthService {
     }).lean();
 
     if (!session) {
+      sessionCache.delete(sessionToken);
       throw new UnauthorizedError('Session expired or invalidated. Please log in again.');
     }
 
-    // Touch lastActiveAt
-    await Session.updateOne({ _id: session._id }, { $set: { lastActiveAt: new Date() } });
+    // Non-blocking, throttled lastActiveAt update (avoids a blocking DB write on every GET)
+    const lastActiveMs = session.lastActiveAt ? new Date(session.lastActiveAt).getTime() : 0;
+    if (Date.now() - lastActiveMs > LAST_ACTIVE_TOUCH_INTERVAL_MS) {
+      Session.updateOne({ _id: session._id }, { $set: { lastActiveAt: new Date() } }).catch(() => {});
+    }
 
     const userModel = session.userType === 'PLATFORM' ? PlatformUser : User;
     const user = await userModel.findById(session.userId).lean();
 
     if (!user) {
+      sessionCache.delete(sessionToken);
       throw new UnauthorizedError('User account associated with this session no longer exists');
     }
 
     if (user.status === USER_STATUS.SUSPENDED) {
+      sessionCache.delete(sessionToken);
       throw new UnauthorizedError('Account has been suspended');
     }
 
     delete user.password;
 
-    return {
+    const userContext = {
       ...user,
       userType: session.userType,
       sessionId: session._id,
     };
+
+    setCachedSession(sessionToken, userContext);
+    return userContext;
   }
 }
 

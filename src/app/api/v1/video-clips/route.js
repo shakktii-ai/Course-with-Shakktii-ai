@@ -16,13 +16,18 @@ export async function GET(request) {
 
     const url = new URL(request.url);
     const scope = url.searchParams.get('scope');
+    const limit = url.searchParams.get('limit');
+    const summary = url.searchParams.get('summary') === 'true';
     const isAdmin =
       scope === 'all' &&
       (user.roles?.includes('ORG_ADMIN') ||
         user.roles?.includes('INSTRUCTOR') ||
         user.role === 'SUPER_ADMIN');
 
-    const breakdowns = await VideoClipAnalyzerService.listBreakdowns(tenantId, user._id, isAdmin);
+    const breakdowns = await VideoClipAnalyzerService.listBreakdowns(tenantId, user._id, isAdmin, {
+      limit,
+      summary,
+    });
     return successResponse(breakdowns, 'Video clip breakdowns loaded');
   } catch (error) {
     return handleApiError(error, 'ListVideoClipBreakdowns');

@@ -264,11 +264,33 @@ export class VideoClipAnalyzerService {
   /**
    * List saved video breakdowns
    */
-  static async listBreakdowns(tenantId, userId, isAdmin = false) {
+  static async listBreakdowns(tenantId, userId, isAdmin = false, options = {}) {
     const query = isAdmin ? { tenantId } : { tenantId, createdBy: userId };
+    const limit = Math.min(50, Math.max(1, Number(options.limit) || 30));
+
+    if (options.summary) {
+      const docs = await VideoClipBreakdown.find(query)
+        .select('title language durationSeconds videoSummary overallTopics createdAt clips.thumbnailUrl')
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .lean();
+
+      return docs.map((d) => ({
+        _id: d._id,
+        title: d.title,
+        language: d.language,
+        durationSeconds: d.durationSeconds,
+        videoSummary: d.videoSummary,
+        overallTopics: d.overallTopics || [],
+        createdAt: d.createdAt,
+        clipCount: Array.isArray(d.clips) ? d.clips.length : 0,
+        thumbnailUrl: d.clips?.[0]?.thumbnailUrl || '',
+      }));
+    }
+
     return await VideoClipBreakdown.find(query)
       .sort({ createdAt: -1 })
-      .limit(30)
+      .limit(limit)
       .lean();
   }
 
