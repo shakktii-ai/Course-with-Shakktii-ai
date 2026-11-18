@@ -335,8 +335,8 @@ export default function VoiceLibraryPage() {
                   className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 >
                   <option value="en">English (US)</option>
-                  <option value="hi">Hindi (हिन्दी)</option>
-                  <option value="mr">Marathi (मराठी)</option>
+                  <option value="hi">Hindi</option>
+                  <option value="mr">Marathi</option>
                   <option value="te">Telugu (తెలుగు)</option>
                 </select>
               </div>

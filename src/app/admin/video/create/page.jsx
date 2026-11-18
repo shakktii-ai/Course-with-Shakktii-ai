@@ -477,11 +477,11 @@ export default function CreateVideoProjectPage() {
                     <option value="en-US-GuyNeural">Guy (Professional - Male)</option>
                     <option value="en-US-AriaNeural">Aria (Expressive - Female)</option>
                   </optgroup>
-                  <optgroup label="Hindi (हिन्दी)">
+                  <optgroup label="Hindi">
                     <option value="hi-IN-SwaraNeural">Swara (Studio - Female)</option>
                     <option value="hi-IN-MadhurNeural">Madhur (Clear - Male)</option>
                   </optgroup>
-                  <optgroup label="Marathi (मराठी)">
+                  <optgroup label="Marathi">
                     <option value="mr-IN-AarohiNeural">Aarohi (Authentic - Female)</option>
                     <option value="mr-IN-ManoharNeural">Manohar (Conversational - Male)</option>
                   </optgroup>

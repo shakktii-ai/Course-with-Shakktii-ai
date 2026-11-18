@@ -192,7 +192,7 @@ export function AIVisualLessonExplainer({ block, lessonTitle, courseId }) {
             ) : (
               <>
                 <Volume2 className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
-                <span>🎧 शिकावून सांगा (Explain Visual)</span>
+                <span>Explain Visual (Voice)</span>
               </>
             )}
           </Button>
@@ -297,7 +297,7 @@ export function AIVisualLessonExplainer({ block, lessonTitle, courseId }) {
           <div className="flex items-center gap-2">
             <Layers className="w-4 h-4 text-emerald-400" />
             <h4 className="text-xs font-bold text-white uppercase tracking-wider">
-              Step-by-Step Visual Walkthrough (दृश्यात्मक शिक्षण)
+              Step-by-Step Visual Walkthrough
             </h4>
           </div>
           <span className="text-[11px] text-slate-400">

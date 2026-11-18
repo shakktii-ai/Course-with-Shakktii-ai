@@ -279,8 +279,8 @@ export const PAGINATION = {
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English', direction: 'ltr' },
-  { code: 'mr', name: 'Marathi (मराठी)', direction: 'ltr' },
-  { code: 'hi', name: 'Hindi (हिन्दी)', direction: 'ltr' },
+  { code: 'mr', name: 'Marathi', direction: 'ltr' },
+  { code: 'hi', name: 'Hindi', direction: 'ltr' },
   { code: 'te', name: 'Telugu (తెలుగు)', direction: 'ltr' },
 ];
 
