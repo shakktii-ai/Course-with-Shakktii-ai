@@ -36,10 +36,10 @@ import { Badge } from '@/components/ui/Badge';
 import { Input, Label } from '@/components/ui/Input';
 
 const LANGUAGES = [
-  { value: 'Marathi-English', label: 'Marathi + English (Easy Mix)', hint: 'मराठी स्पष्टीकरण + English terms' },
-  { value: 'Marathi', label: 'मराठी (Pure Marathi)', hint: 'संपूर्ण स्पष्टीकरण मराठीत' },
-  { value: 'English', label: 'English', hint: 'Clear academic English' },
-  { value: 'Hindi', label: 'हिंदी (Hindi)', hint: 'सरल हिंदी में व्याख्या' },
+  { value: 'English', label: 'English', hint: 'Clear academic English explanations' },
+  { value: 'Marathi-English', label: 'Marathi + English (Mix)', hint: 'Simple Marathi explanations with English technical terms' },
+  { value: 'Marathi', label: 'Marathi', hint: 'Complete explanations in Marathi' },
+  { value: 'Hindi', label: 'Hindi', hint: 'Complete explanations in Hindi' },
 ];
 
 const CLIP_STYLES = [
@@ -71,7 +71,7 @@ export function VideoClipStudio({ isAdmin = false }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [detectedDuration, setDetectedDuration] = useState(0);
   const [title, setTitle] = useState('');
-  const [language, setLanguage] = useState('Marathi-English');
+  const [language, setLanguage] = useState('English');
   const [clipStyle, setClipStyle] = useState('AUTO');
   const [isDragging, setIsDragging] = useState(false);
 
@@ -427,9 +427,9 @@ export function VideoClipStudio({ isAdmin = false }) {
             AI Video Clips &amp; Explanation Studio
           </h1>
           <p className="text-sm text-slate-300 max-w-2xl">
-            कोणताही मोठा व्हिडिओ अपलोड करा — AI स्वतः संपूर्ण व्हिडिओ पाहून महत्त्वाच्या{' '}
-            <strong className="text-emerald-300">छोट्या व्हिडिओ क्लिप्स (Short Clips)</strong>,{' '}
-            सोप्या भाषेत <strong className="text-emerald-300">स्पष्टीकरण (Explanation)</strong>, Key Notes आणि Mini-Quiz तयार करून देईल!
+            Upload any long lecture, tutorial, or demo video — AI watches and listens to the full video to automatically generate{' '}
+            <strong className="text-emerald-300">topic-wise Short Clips</strong>,{' '}
+            clear <strong className="text-emerald-300">AI Explanations</strong>, Key Takeaways, and Mini-Quizzes.
           </p>
         </div>
 
@@ -467,7 +467,7 @@ export function VideoClipStudio({ isAdmin = false }) {
               Saved Video Breakdowns
             </CardTitle>
             <CardDescription>
-              तुम्ही आधी प्रोसेस केलेले व्हिडिओ आणि त्यांच्या शॉर्ट क्लिप्स इथे कधीही पुन्हा पाहू शकता.
+              Revisit any previously analyzed videos, short clips, and AI study notes anytime.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -479,9 +479,9 @@ export function VideoClipStudio({ isAdmin = false }) {
             ) : savedBreakdowns.length === 0 ? (
               <div className="text-center py-12 space-y-3">
                 <Video className="w-10 h-10 text-slate-300 mx-auto" />
-                <p className="text-slate-600 font-medium">अजून एकही व्हिडिओ अपलोड केलेला नाही.</p>
+                <p className="text-slate-600 font-medium">No videos uploaded yet.</p>
                 <Button onClick={startNewUpload} leftIcon={<Upload className="w-4 h-4" />}>
-                  पहिला व्हिडिओ अपलोड करा
+                  Upload Your First Video
                 </Button>
               </div>
             ) : (
@@ -526,7 +526,7 @@ export function VideoClipStudio({ isAdmin = false }) {
                         </p>
                       </div>
                       <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                        <Badge variant="slate">{item.language || 'Marathi-English'}</Badge>
+                        <Badge variant="slate">{item.language || 'English'}</Badge>
                         <button
                           type="button"
                           onClick={(e) => handleDeleteBreakdown(item._id, e)}
@@ -556,7 +556,7 @@ export function VideoClipStudio({ isAdmin = false }) {
                 Upload Video for AI Slicing &amp; Explanation
               </CardTitle>
               <CardDescription>
-                MP4, MOV, WebM किंवा MKV व्हिडिओ निवडा (100 MB पर्यंत). AI स्वतः क्लिप्स कट करून प्रत्येक क्लिपचे स्पष्टीकरण देईल.
+                Select an MP4, MOV, WebM, or MKV video (up to 100 MB). AI will automatically slice it into topic clips and generate detailed explanations.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -604,7 +604,7 @@ export function VideoClipStudio({ isAdmin = false }) {
                         </Badge>
                       )}
                     </div>
-                    <p className="text-xs text-emerald-700 pt-1">वेगळा व्हिडिओ निवडण्यासाठी पुन्हा क्लिक करा</p>
+                    <p className="text-xs text-emerald-700 pt-1">Click again to choose a different video</p>
                   </div>
                 ) : (
                   <div className="space-y-2.5">
@@ -613,7 +613,7 @@ export function VideoClipStudio({ isAdmin = false }) {
                     </div>
                     <div>
                       <p className="font-semibold text-slate-900">
-                        व्हिडिओ इथे ड्रॅग करा किंवा निवडा (Click to Upload Video)
+                        Drag &amp; drop your video here, or click to browse
                       </p>
                       <p className="text-xs text-slate-500 mt-1">
                         Supports MP4, MOV, WebM, MKV • Max size 100 MB
@@ -628,7 +628,7 @@ export function VideoClipStudio({ isAdmin = false }) {
                 <Label htmlFor="video-title">Video Title (Optional)</Label>
                 <Input
                   id="video-title"
-                  placeholder="उदा. React Hooks Tutorial / Physics Chapter 3 Lecture..."
+                  placeholder="e.g. React Hooks Tutorial / Physics Chapter 3 Lecture..."
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   disabled={isBusy}
@@ -639,7 +639,7 @@ export function VideoClipStudio({ isAdmin = false }) {
               <div className="space-y-2">
                 <Label className="flex items-center gap-1.5">
                   <Languages className="w-4 h-4 text-emerald-600" />
-                  Explanation Language (स्पष्टीकरणाची भाषा)
+                  Explanation Language
                 </Label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {LANGUAGES.map((lang) => (
@@ -723,8 +723,8 @@ export function VideoClipStudio({ isAdmin = false }) {
                   </div>
                   <p className="text-xs text-emerald-700">
                     {processingStage === 'ANALYZING'
-                      ? 'कृपया थोडे थांबा (20–60 सेकंद लागू शकतात) — AI संपूर्ण व्हिडिओ पाहून प्रत्येक क्लिपची अचूक वेळ आणि स्पष्टीकरण तयार करत आहे.'
-                      : 'व्हिडिओ थेट Cloudinary वर अपलोड होत आहे...'}
+                      ? 'Please wait a moment (typically 20–60 seconds) — AI is watching the entire video to detect exact timestamps and generate explanations for each clip.'
+                      : 'Uploading your video directly to Cloudinary CDN...'}
                   </p>
                 </div>
               )}
@@ -753,7 +753,7 @@ export function VideoClipStudio({ isAdmin = false }) {
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-emerald-600" />
-                  हे कसे काम करते?
+                  How It Works
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 text-sm text-slate-600">
@@ -762,8 +762,8 @@ export function VideoClipStudio({ isAdmin = false }) {
                     1
                   </span>
                   <div>
-                    <p className="font-medium text-slate-900">व्हिडिओ अपलोड करा</p>
-                    <p className="text-xs text-slate-500">कोणतेही लेक्चर, कोडिंग डेमो किंवा ट्युटोरियल व्हिडिओ निवडा.</p>
+                    <p className="font-medium text-slate-900">Upload Your Video</p>
+                    <p className="text-xs text-slate-500">Choose any lecture, coding walkthrough, or tutorial video.</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -771,8 +771,8 @@ export function VideoClipStudio({ isAdmin = false }) {
                     2
                   </span>
                   <div>
-                    <p className="font-medium text-slate-900">AI टॉपिकनुसार शॉर्ट क्लिप्स कट करेल</p>
-                    <p className="text-xs text-slate-500">Gemini संपूर्ण व्हिडिओ पाहून प्रत्येक टॉपिकचे अचूक Start व End timestamp काढेल.</p>
+                    <p className="font-medium text-slate-900">AI Auto-Slices Topic Clips</p>
+                    <p className="text-xs text-slate-500">Gemini analyzes audio &amp; visuals to detect exact start and end timestamps for each topic.</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -780,8 +780,8 @@ export function VideoClipStudio({ isAdmin = false }) {
                     3
                   </span>
                   <div>
-                    <p className="font-medium text-slate-900">क्लिप प्ले करा, डाउनलोड करा &amp; शिका</p>
-                    <p className="text-xs text-slate-500">प्रत्येक छोट्या क्लिपसोबत सोपे स्पष्टीकरण, मुख्य मुद्दे आणि क्विझ मिळेल.</p>
+                    <p className="font-medium text-slate-900">Play, Download &amp; Learn Faster</p>
+                    <p className="text-xs text-slate-500">Every short clip includes clear explanations, key takeaways, examples, and a quick quiz.</p>
                   </div>
                 </div>
               </CardContent>
@@ -1126,7 +1126,7 @@ export function VideoClipStudio({ isAdmin = false }) {
                   <div>
                     <CardTitle className="text-lg flex items-center gap-2">
                       <BookOpen className="w-5 h-5 text-emerald-600" />
-                      AI Explanation (स्पष्टीकरण)
+                      AI Explanation
                     </CardTitle>
                     {activeClip.shortSummary && (
                       <CardDescription className="mt-1">{activeClip.shortSummary}</CardDescription>
@@ -1159,7 +1159,7 @@ export function VideoClipStudio({ isAdmin = false }) {
                     <div className="space-y-2.5">
                       <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        Key Takeaways (महत्त्वाचे मुद्दे)
+                        Key Takeaways
                       </h4>
                       <ul className="space-y-2">
                         {activeClip.keyTakeaways.map((point, idx) => (
@@ -1182,7 +1182,7 @@ export function VideoClipStudio({ isAdmin = false }) {
                     <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200 space-y-1">
                       <h4 className="text-sm font-semibold text-amber-900 flex items-center gap-1.5">
                         <Lightbulb className="w-4 h-4 text-amber-600" />
-                        Real-World Example (सोपे उदाहरण)
+                        Real-World Example
                       </h4>
                       <p className="text-sm text-amber-950/90 leading-relaxed">
                         {activeClip.realWorldExample}
